@@ -114,7 +114,7 @@ class LocalDocumentQA:
     问题:
     {{question}} """
         
-        prompt = PromptTemplate(input_variables=["content","question"],template=prompt_template)
+        prompt = PromptTemplate(input_variables=["question","content"],template=prompt_template)
 
         self.llm.history = chat_history
 
