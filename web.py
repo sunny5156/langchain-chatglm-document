@@ -54,7 +54,7 @@ def init_model():
 
     try:
         local_document_qa.init_cfg()
-        local_document_qa.llm._call("你好")
+        local_document_qa.llm._call("你好") 
         return """ 模型已成功加载，请选择文件后点击"加载文件"按钮 """
     except:
         return """ 模型加载异常，请选择文件后点击"加载文件"按钮 """
