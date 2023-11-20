@@ -155,6 +155,8 @@ with gr.Blocks(css=block_css) as demo:
 
     load_file_button.click(get_vector_store,show_progress=True,inputs=[selectFile,chatbot],outputs=[vector_store_path,chatbot])
 
+    print("================================\n",query)
+
     query.submit(get_answer,[query,vector_store_path,chatbot],[chatbot,query])
 
 
