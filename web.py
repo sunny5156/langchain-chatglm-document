@@ -131,7 +131,7 @@ with gr.Blocks(css=block_css) as demo:
 
             llm_history_len = gr.Slider(0,10,value=3,step=1,label="LLM history len",interactive=True)
 
-            embedding_model = gr.Radio(embedding_model_dict_list,lable="Embedding 模型",value=EMBEDDING_MODEL,interactive=True)
+            embedding_model = gr.Radio(embedding_model_dict_list,label="Embedding 模型",value=EMBEDDING_MODEL,interactive=True)
 
             top_k = gr.Slider(1,20,value=6,step=1,label="向量匹配 topk",interactive=True)
 
