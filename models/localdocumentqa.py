@@ -4,6 +4,7 @@ from genericpath import isdir
 from typing import List
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from pkg_resources import VersionConflict
+from sympy import content
 from config.config import *
 from models.chatglm import ChatGLM
 
@@ -114,7 +115,9 @@ class LocalDocumentQA:
     问题:
     {{question}} """
         
-        prompt = PromptTemplate(input_variables=["question","content"],template=prompt_template)
+        prompt = PromptTemplate(input_variables=["content","question"],template=prompt_template)
+
+        prompt.format(content="代码解释", questiont="新特性")
 
         self.llm.history = chat_history
 
