@@ -33,6 +33,9 @@ def upload_file(file):
 
 
 def get_answer(query,vector_store_path,history):
+
+    print("********************************\n",query,vector_store_path,history)
+
     if vector_store_path:
         resp, history = local_document_qa.get_knowledge_based_answer(query=query,vector_store_path=vector_store_path,chat_history=history)
     else:
