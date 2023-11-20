@@ -20,6 +20,8 @@ import sentence_transformers
 
 import os
 
+from models.chinese_text_splitter import ChineseTextSplitter
+
 
 class LocalDocumentQA:
 
@@ -48,7 +50,19 @@ class LocalDocumentQA:
 
         self.top_k = top_k
 
-
+    def load_file(self, filepath):
+        if filepath.lower().endswith(".md"):
+            loader = UnstructuredFileLoader(filepath, mode="elements")
+            docs = loader.load()
+        elif filepath.lower().endswith(".pdf"):
+            loader = UnstructuredFileLoader(filepath)
+            textsplitter = ChineseTextSplitter(pdf=True)
+            docs = loader.load_and_split(textsplitter)
+        else:
+            loader = UnstructuredFileLoader(filepath, mode="elements")
+            textsplitter = ChineseTextSplitter(pdf=False)
+            docs = loader.load_and_split(text_splitter=textsplitter)
+        return docs
 
     def init_knowledge_vector_store(self, filepath: str or List[str]):
 
@@ -63,8 +77,9 @@ class LocalDocumentQA:
                 file = os.path.split(filepath)[-1]
 
                 try:
-                    loader = UnstructuredFileLoader(filepath,mode="elements")
-                    docs = loader.load()
+                    # loader = UnstructuredFileLoader(filepath,mode="elements")
+                    # docs = loader.load()
+                    docs = self.load_file(filepath)
                     print(f"{file} 已经加在完成")
 
                 except:
@@ -77,8 +92,9 @@ class LocalDocumentQA:
                     fullfilepath = os.path.join(filepath, file)
 
                     try:
-                        loader = UnstructuredFileLoader(fullfilepath,mode="elements")
-                        docs += loader.load()
+                        # loader = UnstructuredFileLoader(fullfilepath,mode="elements")
+                        # docs += loader.load()
+                        docs += self.load_file(fullfilepath)
                         print(f"{file} 已经加在完成")
                     except:
                         print(f"{file} 加载出现异常")
@@ -87,8 +103,9 @@ class LocalDocumentQA:
             for file in filepath:
                 try:
 
-                    loader = UnstructuredFileLoader(file,mode="elements")
-                    docs += loader.load()
+                    # loader = UnstructuredFileLoader(file,mode="elements")
+                    # docs += loader.load()
+                    docs += self.load_file(file)
                     print(f"{file} 已经加在完成")
                 except:
                     print(f"{file} 加载出现异常")
