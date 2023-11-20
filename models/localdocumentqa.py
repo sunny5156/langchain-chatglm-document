@@ -3,7 +3,6 @@ import datetime
 from genericpath import isdir
 from typing import List
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
-from matplotlib import docstring
 from pkg_resources import VersionConflict
 from config.config import *
 from models.chatglm import ChatGLM
