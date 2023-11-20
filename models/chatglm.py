@@ -1,6 +1,6 @@
 from typing import Optional,List
 from langchain.llms.base import LLM
-
+from langchain.llms.utils import enforce_stop_tokens
 from config.config import LLM_DEVICE
 
 from transformers import AutoTokenizer,AutoModel
@@ -26,7 +26,7 @@ class ChatGLM(LLM):
 
     @property
     def _llm_type(self) -> str:
-        return "ChatGLM"
+        return "ChatGLM3"
 
 
     def _call(self,prompt: str,stop:Optional[List[str]] = None) -> str:
@@ -40,10 +40,9 @@ class ChatGLM(LLM):
         self.history = self.history+[[None,response]]
 
 
-    def load_model(self,model_path: str = "THUDM/chatglm-6b",llm_device=LLM_DEVICE):
+    def load_model(self,model_path: str = "THUDM/chatglm3-6b",llm_device=LLM_DEVICE):
 
         self.tokenizer = AutoTokenizer.from_pretrained(model_path,trust_remote_code=True)
-
-        self.model = AutoModel.from_pretrained(model_path,llm_device).cuda()
+        self.model = AutoModel.from_pretrained(model_path,trust_remote_code=True).cuda()
 
         self.model = self.model.eval()

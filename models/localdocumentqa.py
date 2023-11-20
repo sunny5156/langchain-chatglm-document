@@ -14,7 +14,6 @@ from langchain.vectorstores import FAISS
 
 from langchain.prompts import PromptTemplate
 
-
 from langchain.chains import RetrievalQA
 
 import sentence_transformers
@@ -111,12 +110,12 @@ class LocalDocumentQA:
     如果无法从中得到答案，请说 "根据已知信息无法回答该问题" 或 "没有提供足够的相关信息"，不允许在答案中添加编造成分，答案请使用中文。
 
     已知内容:
-    {context}
+    {{context}}
     
     问题:
-    {question}"""
+    {{question}} """
         
-        prompt = PromptTemplate(template=prompt_template,input_variables=["content","question"])
+        prompt = PromptTemplate(input_variables=["content","question"],template=prompt_template)
 
         self.llm.history = chat_history
 
@@ -124,7 +123,7 @@ class LocalDocumentQA:
 
         knowledge_chain = RetrievalQA.from_llm(llm=self.llm,retriever=vector_store.as_retrieval(search_kwargs={"k": self.top_k}),prompt=prompt)
 
-        knowledge_chain.combine_documents_chain.document_prompt = PromptTemplate(input_variables=["page_conteng"], template="{page_content}")
+        knowledge_chain.combine_documents_chain.document_prompt = PromptTemplate(input_variables=["page_conteng"], template="{{page_content}}")
 
         knowledge_chain.return_source_documents = True
 
