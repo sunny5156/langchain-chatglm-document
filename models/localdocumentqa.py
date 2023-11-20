@@ -77,9 +77,9 @@ class LocalDocumentQA:
                 file = os.path.split(filepath)[-1]
 
                 try:
-                    # loader = UnstructuredFileLoader(filepath,mode="elements")
-                    # docs = loader.load()
-                    docs = self.load_file(filepath)
+                    loader = UnstructuredFileLoader(filepath,mode="elements")
+                    docs = loader.load()
+                    # docs = self.load_file(filepath)
                     print(f"{file} 已经加在完成")
 
                 except:
@@ -92,9 +92,9 @@ class LocalDocumentQA:
                     fullfilepath = os.path.join(filepath, file)
 
                     try:
-                        # loader = UnstructuredFileLoader(fullfilepath,mode="elements")
-                        # docs += loader.load()
-                        docs += self.load_file(fullfilepath)
+                        loader = UnstructuredFileLoader(fullfilepath,mode="elements")
+                        docs += loader.load()
+                        # docs += self.load_file(fullfilepath)
                         print(f"{file} 已经加在完成")
                     except:
                         print(f"{file} 加载出现异常")
@@ -103,9 +103,9 @@ class LocalDocumentQA:
             for file in filepath:
                 try:
 
-                    # loader = UnstructuredFileLoader(file,mode="elements")
-                    # docs += loader.load()
-                    docs += self.load_file(file)
+                    loader = UnstructuredFileLoader(file,mode="elements")
+                    docs += loader.load()
+                    # docs += self.load_file(file)
                     print(f"{file} 已经加在完成")
                 except:
                     print(f"{file} 加载出现异常")
