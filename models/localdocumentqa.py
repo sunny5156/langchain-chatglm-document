@@ -98,6 +98,8 @@ class LocalDocumentQA:
 
         vector_store_path = f"""./data/vector_store/{os.path.splitext(file)[0]}_FAISS_{datetime.datetime.now().strftime("%Y%m%d_%H%M%S")}"""
 
+        print("-----------------------", vector_store_path)
+
         vector_store.save_local(vector_store_path)
 
         return vector_store_path if len(docs)>0 else None
