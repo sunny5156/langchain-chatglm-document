@@ -114,51 +114,52 @@ init_message = """
 model_status = init_model()
 
 
+if __name__ == "__main__":
+    with gr.Blocks(css=block_css) as demo:
 
-with gr.Blocks(css=block_css) as demo:
+        vector_store_path,file_status,model_status = gr.State(""),gr.State(""),gr.State(model_status)
 
-    vector_store_path,file_status,model_status = gr.State(""),gr.State(""),gr.State(model_status)
+        gr.Markdown(webui_title)
 
-    gr.Markdown(webui_title)
+        with gr.Row():
 
-    with gr.Row():
+            with gr.Column(scale=2):
 
-        with gr.Column(scale=2):
+                chatbot = gr.Chatbot([[None,init_message],[None,model_status.value]],elem_id="chat-box",show_label=False).style(height=750)
 
-            chatbot = gr.Chatbot([[None,init_message],[None,model_status.value]],elem_id="chat-box",show_label=False).style(height=750)
-
-            query = gr.Textbox(show_label=False,placeholder="请输入提问内容，按回车键提交").style(container=False)
-
-
-        with gr.Column(scale=1):
-            llm_model = gr.Radio(llm_model_dict_list, label="LLM 模型",value=LLM_MODEL,interactive=True)
-
-            llm_history_len = gr.Slider(0,10,value=3,step=1,label="LLM history len",interactive=True)
-
-            embedding_model = gr.Radio(embedding_model_dict_list,label="Embedding 模型",value=EMBEDDING_MODEL,interactive=True)
-
-            top_k = gr.Slider(1,20,value=6,step=1,label="向量匹配 topk",interactive=True)
-
-            load_model_buttom = gr.Button("重新加载模型")
-
-            with gr.Tab("select"):
-
-                selectFile = gr.Dropdown(file_list,label="content file",interactive=True,value=file_list[0] if len(file_list)>0 else None)
-
-            with gr.Tab("upload"):
-                file = gr.File(label="content file",file_types=['.txt', '.md', '.docx', '.pdf'])
-            
-            load_file_button = gr.Button("加载文件")
-    load_model_buttom.click(reinit_model,show_progress=True,inputs=[llm_model,embedding_model,llm_history_len,top_k,chatbot],outputs=chatbot)
+                query = gr.Textbox(show_label=False,placeholder="请输入提问内容，按回车键提交")
 
 
-    file.upload(upload_file,inputs=file,outputs=selectFile)
+            with gr.Column(scale=1):
+                llm_model = gr.Radio(llm_model_dict_list, label="LLM 模型",value=LLM_MODEL,interactive=True)
 
-    load_file_button.click(get_vector_store,show_progress=True,inputs=[selectFile,chatbot],outputs=[vector_store_path,chatbot])
+                llm_history_len = gr.Slider(0,10,value=3,step=1,label="LLM history len",interactive=True)
 
-    print("================================\n",query)
+                embedding_model = gr.Radio(embedding_model_dict_list,label="Embedding 模型",value=EMBEDDING_MODEL,interactive=True)
 
-    query.submit(get_answer,[query,vector_store_path,chatbot],[chatbot,query])
+                top_k = gr.Slider(1,20,value=6,step=1,label="向量匹配 topk",interactive=True)
+
+                load_model_buttom = gr.Button("重新加载模型")
+
+                with gr.Tab("select"):
+
+                    selectFile = gr.Dropdown(file_list,label="content file",interactive=True,value=file_list[0] if len(file_list)>0 else None)
+
+                with gr.Tab("upload"):
+                    file = gr.File(label="content file",file_types=['.txt', '.md', '.docx', '.pdf'])
+                
+                load_file_button = gr.Button("加载文件")
+
+        load_model_buttom.click(reinit_model,show_progress=True,inputs=[llm_model,embedding_model,llm_history_len,top_k,chatbot],outputs=chatbot)
 
 
-demo.queue(concurrency_count=3).launch(server_name="0.0.0.0",share=False,inbrowser=False)
+        file.upload(upload_file,inputs=file,outputs=selectFile)
+
+        load_file_button.click(get_vector_store,show_progress=True,inputs=[selectFile,chatbot],outputs=[vector_store_path,chatbot])
+
+        print("================================\n",query)
+
+        query.submit(get_answer,inputs=[query,vector_store_path,chatbot],outputs=[chatbot,query])
+
+
+    demo.queue(concurrency_count=3).launch(server_name="0.0.0.0",share=False,inbrowser=False)
