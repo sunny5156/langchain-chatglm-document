@@ -109,7 +109,7 @@ class LocalDocumentQA:
     如果无法从中得到答案，请说 "根据已知信息无法回答该问题" 或 "没有提供足够的相关信息"，不允许在答案中添加编造成分，答案请使用中文。
 
     已知内容:
-    {{context}}
+    {{content}}
     
     问题:
     {{question}} """
@@ -122,7 +122,7 @@ class LocalDocumentQA:
 
         knowledge_chain = RetrievalQA.from_llm(llm=self.llm,retriever=vector_store.as_retrieval(search_kwargs={"k": self.top_k}),prompt=prompt)
 
-        knowledge_chain.combine_documents_chain.document_prompt = PromptTemplate(input_variables=["page_conteng"], template="{{page_content}}")
+        knowledge_chain.combine_documents_chain.document_prompt = PromptTemplate(input_variables=["page_content"], template="{{page_content}}")
 
         knowledge_chain.return_source_documents = True
 
