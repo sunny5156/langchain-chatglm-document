@@ -117,7 +117,7 @@ class LocalDocumentQA:
         
         prompt = PromptTemplate(input_variables=["content","question"],template=prompt_template)
 
-        prompt.format(content="代码解释", questiont="新特性")
+        print(prompt.format(content="代码解释", questiont="新特性"))
 
         self.llm.history = chat_history
 
