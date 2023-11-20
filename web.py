@@ -73,8 +73,10 @@ def reinit_model(llm_model,embedding_model,llm_history_len,top_k,history):
 
 def get_vector_store(filepath,history):
 
+    print("****************************************************************\n",FILE_CONTENT_PATH + filepath)
+
     if local_document_qa.llm and local_document_qa.llm:
-        vector_store_path = local_document_qa.init_knowledge_vector_store([FILE_CONTENT_PATH + filepath])
+        vector_store_path = local_document_qa.init_knowledge_vector_store(FILE_CONTENT_PATH + filepath)
 
         if vector_store_path:
             file_status = "文件已经成功加载，请开始提问"
