@@ -66,7 +66,8 @@ def init_model():
         local_document_qa.init_cfg()
         # local_document_qa.llm._call("你好") 
         return """ 模型已成功加载，请选择文件后点击"加载文件"按钮 """
-    except:
+    except Exception as e:
+        print(e)
         return """ 模型加载异常，请选择文件后点击"加载文件"按钮 """
 
 def reinit_model(llm_model,embedding_model,llm_history_len,top_k,history):
