@@ -1,4 +1,4 @@
-langchain>=0.0.124
+langchain==0.0.174
 transformers==4.27.1
 unstructured[local-inference]
 layoutparser[layoutmodels,tesseract]
@@ -7,6 +7,7 @@ sentence-transformers
 beautifulsoup4
 icetk
 cpm_kernels
-faiss-cpu
-gradio>=3.25.0
-detectron2@git+https://github.com/facebookresearch/detectron2.git@v0.6#egg=detectron2
+faiss-cpu==1.7.4
+gradio==3.50.2
+tourch==2.0.1
+#detectron2@git+https://github.com/facebookresearch/detectron2.git@v0.6#egg=detectron2

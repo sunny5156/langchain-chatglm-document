@@ -34,14 +34,24 @@ def upload_file(file):
 
 def get_answer(query,vector_store_path,history):
 
-    print("********************************\n",query,vector_store_path,history)
 
-    if vector_store_path:
-        resp, history = local_document_qa.get_knowledge_based_answer(query=query,vector_store_path=vector_store_path,chat_history=history)
-    else:
-        history = history + [[None,"请先加载文件后，再提问"]]
+    # if vector_store_path:
+    #     resp, history = local_document_qa.get_knowledge_based_answer(query=query,vector_store_path=vector_store_path,chat_history=history)
+    # else:
+    #     history = history + [[None,"请先加载文件后，再提问"]]
 
-    return history,""
+    for resp, history in local_document_qa.get_knowledge_based_answer(query=query, vector_store_path=vector_store_path, chat_history=history):
+            source = "\n\n"
+            source += "".join(
+                [f"""<details> <summary>出处 [{i + 1}] {os.path.split(doc.metadata["source"])[-1]}</summary>\n"""
+                 f"""{doc.page_content}\n"""
+                 f"""</details>"""
+                 for i, doc in
+                 enumerate(resp["source_documents"])])
+            history[-1][-1] += source
+            yield history, ""
+
+    # return history,""
 
 
 def update_status(history, status):
@@ -54,7 +64,7 @@ def init_model():
 
     try:
         local_document_qa.init_cfg()
-        local_document_qa.llm._call("你好") 
+        # local_document_qa.llm._call("你好") 
         return """ 模型已成功加载，请选择文件后点击"加载文件"按钮 """
     except:
         return """ 模型加载异常，请选择文件后点击"加载文件"按钮 """
@@ -72,8 +82,6 @@ def reinit_model(llm_model,embedding_model,llm_history_len,top_k,history):
 
 
 def get_vector_store(filepath,history):
-
-    print("****************************************************************\n",FILE_CONTENT_PATH + filepath)
 
     if local_document_qa.llm and local_document_qa.llm:
         vector_store_path = local_document_qa.init_knowledge_vector_store([FILE_CONTENT_PATH + filepath])
@@ -117,7 +125,7 @@ model_status = init_model()
 
 
 if __name__ == "__main__":
-    with gr.Blocks(css=block_css) as demo:
+    with gr.Blocks(css=block_css) as app:
 
         vector_store_path,file_status,model_status = gr.State(""),gr.State(""),gr.State(model_status)
 
@@ -159,9 +167,7 @@ if __name__ == "__main__":
 
         load_file_button.click(get_vector_store,show_progress=True,inputs=[selectFile,chatbot],outputs=[vector_store_path,chatbot])
 
-        print("================================\n",query)
-
         query.submit(get_answer,inputs=[query,vector_store_path,chatbot],outputs=[chatbot,query])
 
 
-    demo.queue(concurrency_count=3).launch(server_name="0.0.0.0",share=False,inbrowser=False)
+    app.queue(concurrency_count=3).launch(server_name="0.0.0.0",share=False,inbrowser=False)
